@@ -1,0 +1,210 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.2, pytest-8.3.3, pluggy-1.6.0
+rootdir: C:\Users\Hoz\Documents\Python projects\de-project-bibip\tests
+collected 7 items
+
+test_scenarios.py FFFFFFF                                                [100%]
+
+================================== FAILURES ===================================
+__________________ TestCarServiceScenarios.test_add_new_car ___________________
+
+self = <tests.test_scenarios.TestCarServiceScenarios object at 0x000001D946D49A90>
+tmpdir = 'C:\\Users\\Hoz\\Documents\\Python projects\\de-project-bibip\\tests\\temdir\\20250605063305-682d9cc8-7f92-44d6-9670-58e7b9d56d901vjrafuz'
+car_data = [Car(vin='KNAGM4A77D5316538', model=1, price=Decimal('2000'), date_start=datetime.datetime(2024, 2, 8, 0, 0), status=<...rice=Decimal('2376'), date_start=datetime.datetime(2024, 5, 17, 0, 0), status=<CarStatus.available: 'available'>), ...]
+model_data = [Model(id=1, name='Optima', brand='Kia'), Model(id=2, name='Sorento', brand='Kia'), Model(id=3, name='3', brand='Mazda'), Model(id=4, name='Pathfinder', brand='Nissan'), Model(id=5, name='Logan', brand='Renault')]
+
+    def test_add_new_car(self, tmpdir: str, car_data: list[Car], model_data: list[Model]) -> None:
+        service = CarService(tmpdir)
+    
+>       self._fill_initial_data(service, car_data, model_data)
+
+test_scenarios.py:115: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_scenarios.py:107: in _fill_initial_data
+    service.add_model(model)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <bibip_car_service.CarService object at 0x000001D946D45BE0>
+model = Model(id=1, name='Optima', brand='Kia')
+
+    def add_model(self, model: Model) -> Model:
+>       raise NotImplementedError
+E       NotImplementedError
+
+..\src\bibip_car_service.py:10: NotImplementedError
+____________________ TestCarServiceScenarios.test_sell_car ____________________
+
+self = <tests.test_scenarios.TestCarServiceScenarios object at 0x000001D949204CD0>
+tmpdir = 'C:\\Users\\Hoz\\Documents\\Python projects\\de-project-bibip\\tests\\temdir\\20250605063305-6034fb5d-f914-4e07-9bae-58c72dbc227dtq5a6nbq'
+car_data = [Car(vin='KNAGM4A77D5316538', model=1, price=Decimal('2000'), date_start=datetime.datetime(2024, 2, 8, 0, 0), status=<...rice=Decimal('2376'), date_start=datetime.datetime(2024, 5, 17, 0, 0), status=<CarStatus.available: 'available'>), ...]
+model_data = [Model(id=1, name='Optima', brand='Kia'), Model(id=2, name='Sorento', brand='Kia'), Model(id=3, name='3', brand='Mazda'), Model(id=4, name='Pathfinder', brand='Nissan'), Model(id=5, name='Logan', brand='Renault')]
+
+    def test_sell_car(self, tmpdir: str, car_data: list[Car], model_data: list[Model]) -> None:
+        service = CarService(tmpdir)
+    
+>       self._fill_initial_data(service, car_data, model_data)
+
+test_scenarios.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_scenarios.py:107: in _fill_initial_data
+    service.add_model(model)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <bibip_car_service.CarService object at 0x000001D9490FAD50>
+model = Model(id=1, name='Optima', brand='Kia')
+
+    def add_model(self, model: Model) -> Model:
+>       raise NotImplementedError
+E       NotImplementedError
+
+..\src\bibip_car_service.py:10: NotImplementedError
+_________ TestCarServiceScenarios.test_list_cars_by_available_status __________
+
+self = <tests.test_scenarios.TestCarServiceScenarios object at 0x000001D949173490>
+tmpdir = 'C:\\Users\\Hoz\\Documents\\Python projects\\de-project-bibip\\tests\\temdir\\20250605063305-7efd73c4-bdad-4750-ac03-063723302469khhrr2v8'
+car_data = [Car(vin='KNAGM4A77D5316538', model=1, price=Decimal('2000'), date_start=datetime.datetime(2024, 2, 8, 0, 0), status=<...rice=Decimal('2376'), date_start=datetime.datetime(2024, 5, 17, 0, 0), status=<CarStatus.available: 'available'>), ...]
+model_data = [Model(id=1, name='Optima', brand='Kia'), Model(id=2, name='Sorento', brand='Kia'), Model(id=3, name='3', brand='Mazda'), Model(id=4, name='Pathfinder', brand='Nissan'), Model(id=5, name='Logan', brand='Renault')]
+
+    def test_list_cars_by_available_status(self, tmpdir: str, car_data: list[Car], model_data: list[Model]):
+        service = CarService(tmpdir)
+    
+>       self._fill_initial_data(service, car_data, model_data)
+
+test_scenarios.py:139: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_scenarios.py:107: in _fill_initial_data
+    service.add_model(model)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <bibip_car_service.CarService object at 0x000001D9492056D0>
+model = Model(id=1, name='Optima', brand='Kia')
+
+    def add_model(self, model: Model) -> Model:
+>       raise NotImplementedError
+E       NotImplementedError
+
+..\src\bibip_car_service.py:10: NotImplementedError
+_____________ TestCarServiceScenarios.test_list_full_info_by_vin ______________
+
+self = <tests.test_scenarios.TestCarServiceScenarios object at 0x000001D9491735C0>
+tmpdir = 'C:\\Users\\Hoz\\Documents\\Python projects\\de-project-bibip\\tests\\temdir\\20250605063306-392470d5-9b0a-4f7c-a7f9-6090fa029960sqiit47i'
+car_data = [Car(vin='KNAGM4A77D5316538', model=1, price=Decimal('2000'), date_start=datetime.datetime(2024, 2, 8, 0, 0), status=<...rice=Decimal('2376'), date_start=datetime.datetime(2024, 5, 17, 0, 0), status=<CarStatus.available: 'available'>), ...]
+model_data = [Model(id=1, name='Optima', brand='Kia'), Model(id=2, name='Sorento', brand='Kia'), Model(id=3, name='3', brand='Mazda'), Model(id=4, name='Pathfinder', brand='Nissan'), Model(id=5, name='Logan', brand='Renault')]
+
+    def test_list_full_info_by_vin(self, tmpdir: str, car_data: list[Car], model_data: list[Model]):
+        service = CarService(tmpdir)
+    
+>       self._fill_initial_data(service, car_data, model_data)
+
+test_scenarios.py:148: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_scenarios.py:107: in _fill_initial_data
+    service.add_model(model)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <bibip_car_service.CarService object at 0x000001D94920D0F0>
+model = Model(id=1, name='Optima', brand='Kia')
+
+    def add_model(self, model: Model) -> Model:
+>       raise NotImplementedError
+E       NotImplementedError
+
+..\src\bibip_car_service.py:10: NotImplementedError
+___________________ TestCarServiceScenarios.test_update_vin ___________________
+
+self = <tests.test_scenarios.TestCarServiceScenarios object at 0x000001D9491F6F90>
+tmpdir = 'C:\\Users\\Hoz\\Documents\\Python projects\\de-project-bibip\\tests\\temdir\\20250605063306-a86dc244-8887-42cd-b11a-8345b58c8ec0jbklwsbm'
+car_data = [Car(vin='KNAGM4A77D5316538', model=1, price=Decimal('2000'), date_start=datetime.datetime(2024, 2, 8, 0, 0), status=<...rice=Decimal('2376'), date_start=datetime.datetime(2024, 5, 17, 0, 0), status=<CarStatus.available: 'available'>), ...]
+model_data = [Model(id=1, name='Optima', brand='Kia'), Model(id=2, name='Sorento', brand='Kia'), Model(id=3, name='3', brand='Mazda'), Model(id=4, name='Pathfinder', brand='Nissan'), Model(id=5, name='Logan', brand='Renault')]
+
+    def test_update_vin(self, tmpdir: str, car_data: list[Car], model_data: list[Model]):
+        service = CarService(tmpdir)
+    
+        full_info_no_sale = CarFullInfo(
+            vin="KNAGM4A77D5316538",
+            car_model_name="Optima",
+            car_model_brand="Kia",
+            price=Decimal("2000"),
+            date_start=datetime(2024, 2, 8),
+            status=CarStatus.available,
+            sales_date=None,
+            sales_cost=None,
+        )
+    
+>       self._fill_initial_data(service, car_data, model_data)
+
+test_scenarios.py:199: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_scenarios.py:107: in _fill_initial_data
+    service.add_model(model)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <bibip_car_service.CarService object at 0x000001D94920D350>
+model = Model(id=1, name='Optima', brand='Kia')
+
+    def add_model(self, model: Model) -> Model:
+>       raise NotImplementedError
+E       NotImplementedError
+
+..\src\bibip_car_service.py:10: NotImplementedError
+__________________ TestCarServiceScenarios.test_delete_sale ___________________
+
+self = <tests.test_scenarios.TestCarServiceScenarios object at 0x000001D9490F7350>
+tmpdir = 'C:\\Users\\Hoz\\Documents\\Python projects\\de-project-bibip\\tests\\temdir\\20250605063306-3ad8db0f-d8b7-43ea-8e9f-0687154cca0c3njyhz6u'
+car_data = [Car(vin='KNAGM4A77D5316538', model=1, price=Decimal('2000'), date_start=datetime.datetime(2024, 2, 8, 0, 0), status=<...rice=Decimal('2376'), date_start=datetime.datetime(2024, 5, 17, 0, 0), status=<CarStatus.available: 'available'>), ...]
+model_data = [Model(id=1, name='Optima', brand='Kia'), Model(id=2, name='Sorento', brand='Kia'), Model(id=3, name='3', brand='Mazda'), Model(id=4, name='Pathfinder', brand='Nissan'), Model(id=5, name='Logan', brand='Renault')]
+
+    def test_delete_sale(self, tmpdir: str, car_data: list[Car], model_data: list[Model]):
+        service = CarService(tmpdir)
+    
+>       self._fill_initial_data(service, car_data, model_data)
+
+test_scenarios.py:213: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_scenarios.py:107: in _fill_initial_data
+    service.add_model(model)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <bibip_car_service.CarService object at 0x000001D9491F79B0>
+model = Model(id=1, name='Optima', brand='Kia')
+
+    def add_model(self, model: Model) -> Model:
+>       raise NotImplementedError
+E       NotImplementedError
+
+..\src\bibip_car_service.py:10: NotImplementedError
+_____________ TestCarServiceScenarios.test_top_3_models_by_sales ______________
+
+self = <tests.test_scenarios.TestCarServiceScenarios object at 0x000001D9491FC050>
+tmpdir = 'C:\\Users\\Hoz\\Documents\\Python projects\\de-project-bibip\\tests\\temdir\\20250605063306-981ea239-cd76-4968-99b9-0106bf5be0abg960sfd_'
+car_data = [Car(vin='KNAGM4A77D5316538', model=1, price=Decimal('2000'), date_start=datetime.datetime(2024, 2, 8, 0, 0), status=<...rice=Decimal('2376'), date_start=datetime.datetime(2024, 5, 17, 0, 0), status=<CarStatus.available: 'available'>), ...]
+model_data = [Model(id=1, name='Optima', brand='Kia'), Model(id=2, name='Sorento', brand='Kia'), Model(id=3, name='3', brand='Mazda'), Model(id=4, name='Pathfinder', brand='Nissan'), Model(id=5, name='Logan', brand='Renault')]
+
+    def test_top_3_models_by_sales(self, tmpdir: str, car_data: list[Car], model_data: list[Model]):
+        service = CarService(tmpdir)
+    
+>       self._fill_initial_data(service, car_data, model_data)
+
+test_scenarios.py:237: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_scenarios.py:107: in _fill_initial_data
+    service.add_model(model)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <bibip_car_service.CarService object at 0x000001D9491FF130>
+model = Model(id=1, name='Optima', brand='Kia')
+
+    def add_model(self, model: Model) -> Model:
+>       raise NotImplementedError
+E       NotImplementedError
+
+..\src\bibip_car_service.py:10: NotImplementedError
+=========================== short test summary info ===========================
+FAILED test_scenarios.py::TestCarServiceScenarios::test_add_new_car - NotImpl...
+FAILED test_scenarios.py::TestCarServiceScenarios::test_sell_car - NotImpleme...
+FAILED test_scenarios.py::TestCarServiceScenarios::test_list_cars_by_available_status
+FAILED test_scenarios.py::TestCarServiceScenarios::test_list_full_info_by_vin
+FAILED test_scenarios.py::TestCarServiceScenarios::test_update_vin - NotImple...
+FAILED test_scenarios.py::TestCarServiceScenarios::test_delete_sale - NotImpl...
+FAILED test_scenarios.py::TestCarServiceScenarios::test_top_3_models_by_sales
+============================== 7 failed in 0.78s ==============================

@@ -1,4 +1,5 @@
 from models import Car, CarFullInfo, CarStatus, Model, ModelSaleStats, Sale
+import os
 
 
 class CarService:
@@ -7,9 +8,24 @@ class CarService:
 
     # Задание 1. Сохранение автомобилей и моделей
     def add_model(self, model: Model) -> Model:
-        raise NotImplementedError
-
-    # Задание 1. Сохранение автомобилей и моделей
+        # Translate into string
+        model_string = f"{model.id};{model.brand};{model.name}"
+                
+        # Add \n and spaces till 501 char
+        model_string = model_string.ljust(500)
+        model_string = model_string + '\n'
+        
+        # Calculate lines number
+        with open(file_path, "r", encoding="utf-8") as f:
+            line_number = sum(1 for _ in f)
+        
+        with open(file_path, "r+", encoding="utf-8") as f: # r+ нужен для того, чтобы была возможность писать в тот же файл, что читаем.
+            f.seek(line_number * (501)) # длина строки 501, т.к. добавили символ перехода строки — он тоже считается.
+            f.write(model_string)
+        
+        return model
+    
+     # Задание 1. Сохранение автомобилей и моделей
     def add_car(self, car: Car) -> Car:
         raise NotImplementedError
 
