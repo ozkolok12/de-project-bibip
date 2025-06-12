@@ -71,7 +71,7 @@ class CarService:
             f"{car.status.value}"
         ).ljust(500) + "\n"
 
-        # Путь к cars.txt
+        # Path to cars.txt
         file_path_cars = os.path.join(self.root_directory_path, "cars.txt")
 
         if not os.path.exists(file_path_cars):
@@ -81,12 +81,12 @@ class CarService:
         with open(file_path_cars, "r", encoding="utf-8") as f:
             line_number = sum(1 for _ in f)
 
-        # Записываем в cars.txt
+        # Writing into cars.txt
         with open(file_path_cars, "r+", encoding="utf-8") as f:
             f.seek(line_number * 501)
             f.write(car_string)
 
-        # Путь к cars_index.txt
+        # Path to  cars_index.txt
         file_path_index = os.path.join(self.root_directory_path, "cars_index.txt")
         if not os.path.exists(file_path_index):
             with open(file_path_index, "w", encoding="utf-8"):
@@ -102,7 +102,7 @@ class CarService:
         new_id = len(index_list)
         index_list.append((new_id, car.vin))
 
-        # Перезапись индексного файла
+        # Re-writing index file
         with open(file_path_index, "w", encoding="utf-8") as f:
             for idx, vin in index_list:
                 f.write(f"{idx};{vin}\n")
@@ -110,50 +110,42 @@ class CarService:
         return car
     
 
-    # Задание 2. Сохранение продаж.
     def sell_car(self, sale: Sale) -> Sale:
-        # --- 1) append в sales.txt ---
-        file_path_sales = os.path.join(self.root_directory_path, "sales.txt")
-        os.makedirs(os.path.dirname(file_path_sales), exist_ok=True)
-        # если файла нет — создаём
-        if not os.path.exists(file_path_sales):
-            open(file_path_sales, "w", encoding="utf-8").close()
+        # 1) Adding to sales.txt
+        sales_path = os.path.join(self.root_directory_path, "sales.txt")
+        if not os.path.exists(sales_path):
+            open(sales_path, "w", encoding="utf-8").close()
+        sale_line = f"{sale.sales_number};{sale.car_vin};{sale.cost};{sale.sales_date:%Y-%m-%d}\n"
+        with open(sales_path, "a", encoding="utf-8") as f:
+            f.write(sale_line)
 
-        # форматируем строку (только дата, без времени!)
-        sale_string = (
-            f"{sale.sales_number};"
-            f"{sale.car_vin};"
-            f"{sale.cost};"
-            f"{sale.sales_date:%Y-%m-%d}"
-        ) + "\n"
-
-        # просто дописываем
-        with open(file_path_sales, "a", encoding="utf-8") as f:
-            f.write(sale_string)
-
-        # --- 2) меняем статус машины на sold в cars.txt ---
-        # ищем строку машины
-        cars_idx = os.path.join(self.root_directory_path, "cars_index.txt")
+        # 2) Change fro sold in cars.txt
+        idx_path = os.path.join(self.root_directory_path, "cars_index.txt")
         car_line = None
-        with open(cars_idx, "r", encoding="utf-8") as f:
-            for line in f:
-                idx, vin = line.strip().split(";")
+        with open(idx_path, "r", encoding="utf-8") as f:
+            for rec in f:
+                idx_str, vin = rec.strip().split(";")
                 if vin == sale.car_vin:
-                    car_line = int(idx)
+                    car_line = int(idx_str)
                     break
         if car_line is None:
-            raise ValueError(f"VIN {sale.car_vin} not found in cars_index.txt")
+            raise ValueError(f"VIN {sale.car_vin} not in cars_index")
 
-        cars_txt = os.path.join(self.root_directory_path, "cars.txt")
-        with open(cars_txt, "r+", encoding="utf-8") as f:
+        cars_path = os.path.join(self.root_directory_path, "cars.txt")
+        with open(cars_path, "r+", encoding="utf-8") as f:
             f.seek(car_line * 501)
-            raw = f.readline().rstrip("\n")
-            parts = raw.split(";")
-            # гарантируем, что у нас 5 полей
+            raw_block = f.read(501)
+            raw = raw_block.rstrip("\n")
+            parts = [p.strip() for p in raw.split(";")]
             if len(parts) < 5:
                 raise RuntimeError("Unexpected cars.txt format")
+            
+            # updateing status
             parts[4] = CarStatus.sold.value
+            # заново формируем ровно 500 символов + "\n"
             new_line = ";".join(parts).ljust(500) + "\n"
+            
+            # re-writing
             f.seek(car_line * 501)
             f.write(new_line)
 
@@ -186,7 +178,7 @@ class CarService:
 
     # Задание 4. Детальная информация
     def get_car_info(self, vin: str) -> CarFullInfo | None:
-        # --- 1) Найти строку в cars_index.txt ---
+        # Looking for a string
         cars_index_path = os.path.join(self.root_directory_path, "cars_index.txt")
         car_line = None
         with open(cars_index_path, "r", encoding="utf-8") as f:
@@ -198,7 +190,7 @@ class CarService:
         if car_line is None:
             return None
 
-        # --- 2) Прочитать строку из cars.txt ---
+        # Reading from cars.txt
         cars_path = os.path.join(self.root_directory_path, "cars.txt")
         with open(cars_path, "r", encoding="utf-8") as f:
             f.seek(car_line * 501)
@@ -211,7 +203,7 @@ class CarService:
         date_start = datetime.strptime(date_str, "%Y-%m-%d")
         status     = CarStatus(status_str)
 
-        # --- 3) Получить модель по model_id ---
+        # Finding model by model_id
         models_index_path = os.path.join(self.root_directory_path, "models_index.txt")
         model_line = None
         with open(models_index_path, "r", encoding="utf-8") as f:
@@ -232,7 +224,6 @@ class CarService:
         model_name = name
         model_brand = brand
 
-        # --- 4) Если продано — ищем продажу ---
         sales_date = None
         sales_cost = None
         if status == CarStatus.sold:
@@ -262,14 +253,158 @@ class CarService:
 
 
 
-    # Задание 5. Обновление ключевого поля
-    def update_vin(self, vin: str, new_vin: str) -> Car:
-        raise NotImplementedError
+    # Задание 5. Обновление VIN
+    def update_vin(self, vin: str, new_vin: str) -> Car | None:
+        idx_path = os.path.join(self.root_directory_path, "cars_index.txt")
+        entries = []
+        target = None
+        
+        # Looking for an index
+        with open(idx_path, "r", encoding="utf-8") as f:
+            for rec in f:
+                idx, vin_i = rec.strip().split(";")
+                i = int(idx)
+                entries.append((i, vin_i))
+                if vin_i == vin:
+                    target = i
+        if target is None:
+            return None
 
-    # Задание 6. Удаление продажи
+        cars_path = os.path.join(self.root_directory_path, "cars.txt")
+        
+        # Updating VIn in cars.txt
+        with open(cars_path, "r+", encoding="utf-8") as f:
+            f.seek(target * 501)
+            raw = f.readline().rstrip("\n")
+            parts = [p.strip() for p in raw.split(";")]
+            parts[0] = new_vin
+            new_line = ";".join(parts).ljust(500) + "\n"
+            f.seek(target * 501)
+            f.write(new_line)
+
+        # Updating cars_index.txt
+        entries = [(i, new_vin if i == target else v) for i, v in entries]
+        with open(idx_path, "w", encoding="utf-8") as f:
+            for i, v in entries:
+                f.write(f"{i};{v}\n")
+
+        
+        return Car(
+            vin=new_vin,
+            model=int(parts[1]),
+            price=Decimal(parts[2]),
+            date_start=datetime.strptime(parts[3], "%Y-%m-%d"),
+            status=CarStatus(parts[4])
+        )
+
+
+
+    # Задание 6. Откат продажи
     def revert_sale(self, sales_number: str) -> Car:
-        raise NotImplementedError
+        sales_txt = os.path.join(self.root_directory_path, "sales.txt")
+        kept = []
+        restored_vin = None
+        
+        # Looking for a necessarz string
+        with open(sales_txt, "r", encoding="utf-8") as f:
+            for line in f:
+                sn, vin, cost, date_str = line.strip().split(";")
+                if sn == sales_number:
+                    restored_vin = vin
+                else:
+                    kept.append(line)
+        if restored_vin is None:
+            raise ValueError(f"Sale {sales_number} not found")
 
-    # Задание 7. Самые продаваемые модели
+        # Re-writing sales.txt
+        with open(sales_txt, "w", encoding="utf-8") as f:
+            f.writelines(kept)
+
+        
+        cars_idx = os.path.join(self.root_directory_path, "cars_index.txt")
+        car_line = None
+        with open(cars_idx, "r", encoding="utf-8") as f:
+            for line in f:
+                idx, vin = line.strip().split(";")
+                if vin == restored_vin:
+                    car_line = int(idx)
+                    break
+
+        cars_txt = os.path.join(self.root_directory_path, "cars.txt")
+        with open(cars_txt, "r+", encoding="utf-8") as f:
+            f.seek(car_line * 501)
+            raw = f.readline().rstrip("\n")
+            parts = raw.split(";")
+            parts[4] = CarStatus.available.value
+            new_line = ";".join(parts).ljust(500) + "\n"
+            f.seek(car_line * 501)
+            f.write(new_line)
+
+        return Car(
+            vin=restored_vin,
+            model=int(parts[1]),
+            price=Decimal(parts[2]),
+            date_start=datetime.strptime(parts[3], "%Y-%m-%d"),
+            status=CarStatus.available,
+        )
+
+
     def top_models_by_sales(self) -> list[ModelSaleStats]:
-        raise NotImplementedError
+        
+        cars_idx = {}
+        idx_path = os.path.join(self.root_directory_path, "cars_index.txt")
+        with open(idx_path, "r", encoding="utf-8") as f:
+            for rec in f:
+                idx, vin = rec.strip().split(";")
+                cars_idx[vin] = int(idx)
+
+        # 2) counting by model_id
+        counts: dict[int,int] = {}
+        sales_path = os.path.join(self.root_directory_path, "sales.txt")
+        with open(sales_path, "r", encoding="utf-8") as f:
+            for rec in f:
+                _, vin, _, _ = rec.strip().split(";")
+                if vin not in cars_idx:
+                    continue
+                car_pos = cars_idx[vin]
+
+                
+                cars_path = os.path.join(self.root_directory_path, "cars.txt")
+                with open(cars_path, "r", encoding="utf-8") as cf:
+                    cf.seek(car_pos * 501)
+                    raw_block = cf.read(501)           # 500 chars + "\n"
+                raw = raw_block.rstrip("\n")
+                car_fields = [p.strip() for p in raw.split(";")]
+                # теперь гарантированно car_fields[1] существует
+                mid = int(car_fields[1])
+                counts[mid] = counts.get(mid, 0) + 1
+
+        # Preparing a dictionary
+        model_pos = {}
+        midx_path = os.path.join(self.root_directory_path, "models_index.txt")
+        with open(midx_path, "r", encoding="utf-8") as f:
+            for rec in f:
+                idx, mid = rec.strip().split(";")
+                model_pos[int(mid)] = int(idx)
+
+        
+        stats: list[ModelSaleStats] = []
+        models_path = os.path.join(self.root_directory_path, "models.txt")
+        for mid, cnt in counts.items():
+            pos = model_pos[mid]
+            with open(models_path, "r", encoding="utf-8") as mf:
+                mf.seek(pos * 501)
+                raw_block = mf.read(501)
+            raw = raw_block.rstrip("\n")
+            mf_fields = [p.strip() for p in raw.split(";")]
+            brand = mf_fields[1]
+            name  = mf_fields[2]
+            stats.append(ModelSaleStats(
+                car_model_name=name,
+                brand=brand,
+                sales_number=cnt
+            ))
+
+        # sorting
+        stats.sort(key=lambda s: s.sales_number, reverse=True)
+        return stats[:3]
