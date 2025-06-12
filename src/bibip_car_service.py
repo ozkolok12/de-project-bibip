@@ -4,6 +4,7 @@ import os
 from decimal import Decimal
 from datetime import datetime
 
+
 class CarService:
     def __init__(self, root_directory_path: str) -> None:
         self.root_directory_path = root_directory_path
@@ -34,7 +35,9 @@ class CarService:
             f.write(model_string)
 
         # Writing to models_index.txt
-        file_path_index = os.path.join(self.root_directory_path, "models_index.txt")
+        file_path_index = os.path.join(
+            self.root_directory_path,
+            "models_index.txt")
 
         # Creating file IF NOT EXIST
         if not os.path.exists(file_path_index):
@@ -59,7 +62,7 @@ class CarService:
                 f.write(f"{row[0]};{row[1]}\n")
 
         return model
-    
+
     # Задание 1. Сохранение автомобилей
     def add_car(self, car: Car) -> Car:
         # Формируем строку
@@ -87,7 +90,10 @@ class CarService:
             f.write(car_string)
 
         # Path to  cars_index.txt
-        file_path_index = os.path.join(self.root_directory_path, "cars_index.txt")
+        file_path_index = os.path.join(
+            self.root_directory_path,
+            "cars_index.txt")
+
         if not os.path.exists(file_path_index):
             with open(file_path_index, "w", encoding="utf-8"):
                 pass
@@ -108,14 +114,16 @@ class CarService:
                 f.write(f"{idx};{vin}\n")
 
         return car
-    
 
     def sell_car(self, sale: Sale) -> Sale:
         # 1) Adding to sales.txt
         sales_path = os.path.join(self.root_directory_path, "sales.txt")
         if not os.path.exists(sales_path):
             open(sales_path, "w", encoding="utf-8").close()
-        sale_line = f"{sale.sales_number};{sale.car_vin};{sale.cost};{sale.sales_date:%Y-%m-%d}\n"
+        sale_line = f"{
+            sale.sales_number};{sale.car_vin};{sale.cost};{
+                sale.sales_date:%Y-%m-%d}\n"
+        
         with open(sales_path, "a", encoding="utf-8") as f:
             f.write(sale_line)
 
@@ -151,8 +159,6 @@ class CarService:
 
         return sale
 
-        
-
     # Задание 3. Доступные к продаже
     def get_cars(self, status: CarStatus) -> list[Car]:
     
@@ -175,11 +181,13 @@ class CarService:
                 ))
         return cars
 
-
     # Задание 4. Детальная информация
     def get_car_info(self, vin: str) -> CarFullInfo | None:
         # Looking for a string
-        cars_index_path = os.path.join(self.root_directory_path, "cars_index.txt")
+        cars_index_path = os.path.join(
+            self.root_directory_path,
+            "cars_index.txt")
+        
         car_line = None
         with open(cars_index_path, "r", encoding="utf-8") as f:
             for line in f:
@@ -198,13 +206,16 @@ class CarService:
         car_fields = [field.strip() for field in raw.split(";")]
         car_vin, model_id_str, price_str, date_str, status_str = car_fields[:5]
 
-        model_id   = int(model_id_str)
-        price      = Decimal(price_str)
+        model_id = int(model_id_str)
+        price = Decimal(price_str)
         date_start = datetime.strptime(date_str, "%Y-%m-%d")
-        status     = CarStatus(status_str)
+        status = CarStatus(status_str)
 
         # Finding model by model_id
-        models_index_path = os.path.join(self.root_directory_path, "models_index.txt")
+        models_index_path = os.path.join(
+            self.root_directory_path,
+            "models_index.txt")
+        
         model_line = None
         with open(models_index_path, "r", encoding="utf-8") as f:
             for line in f:
@@ -230,7 +241,9 @@ class CarService:
             sales_path = os.path.join(self.root_directory_path, "sales.txt")
             with open(sales_path, "r", encoding="utf-8") as f:
                 for line in f:
-                    fields = [field.strip() for field in line.strip().split(";")]
+                    fields = [
+                        field.strip() for field in line.strip().split(";")
+                        ]
                     if len(fields) != 4:
                         continue
                     _, vin_i, cost_str, date_str = fields
@@ -249,9 +262,6 @@ class CarService:
             sales_date=sales_date,
             sales_cost=sales_cost
         )
-
-
-
 
     # Задание 5. Обновление VIN
     def update_vin(self, vin: str, new_vin: str) -> Car | None:
@@ -287,8 +297,7 @@ class CarService:
         with open(idx_path, "w", encoding="utf-8") as f:
             for i, v in entries:
                 f.write(f"{i};{v}\n")
-
-        
+       
         return Car(
             vin=new_vin,
             model=int(parts[1]),
@@ -296,8 +305,6 @@ class CarService:
             date_start=datetime.strptime(parts[3], "%Y-%m-%d"),
             status=CarStatus(parts[4])
         )
-
-
 
     # Задание 6. Откат продажи
     def revert_sale(self, sales_number: str) -> Car:
@@ -319,8 +326,7 @@ class CarService:
         # Re-writing sales.txt
         with open(sales_txt, "w", encoding="utf-8") as f:
             f.writelines(kept)
-
-        
+      
         cars_idx = os.path.join(self.root_directory_path, "cars_index.txt")
         car_line = None
         with open(cars_idx, "r", encoding="utf-8") as f:
@@ -348,7 +354,6 @@ class CarService:
             status=CarStatus.available,
         )
 
-
     def top_models_by_sales(self) -> list[ModelSaleStats]:
         
         cars_idx = {}
@@ -359,7 +364,7 @@ class CarService:
                 cars_idx[vin] = int(idx)
 
         # 2) counting by model_id
-        counts: dict[int,int] = {}
+        counts: dict[int, int] = {}
         sales_path = os.path.join(self.root_directory_path, "sales.txt")
         with open(sales_path, "r", encoding="utf-8") as f:
             for rec in f:
@@ -368,7 +373,6 @@ class CarService:
                     continue
                 car_pos = cars_idx[vin]
 
-                
                 cars_path = os.path.join(self.root_directory_path, "cars.txt")
                 with open(cars_path, "r", encoding="utf-8") as cf:
                     cf.seek(car_pos * 501)
@@ -387,7 +391,6 @@ class CarService:
                 idx, mid = rec.strip().split(";")
                 model_pos[int(mid)] = int(idx)
 
-        
         stats: list[ModelSaleStats] = []
         models_path = os.path.join(self.root_directory_path, "models.txt")
         for mid, cnt in counts.items():
@@ -398,7 +401,7 @@ class CarService:
             raw = raw_block.rstrip("\n")
             mf_fields = [p.strip() for p in raw.split(";")]
             brand = mf_fields[1]
-            name  = mf_fields[2]
+            name = mf_fields[2]
             stats.append(ModelSaleStats(
                 car_model_name=name,
                 brand=brand,
